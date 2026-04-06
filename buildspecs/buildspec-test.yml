@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: "3.12"
+    commands:
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install -r requirements-dev.txt
+
+  build:
+    commands:
+      - pytest tests/ --cov=src --cov-report=xml --cov-fail-under=80 -v
+
+reports:
+  pytest-coverage:
+    files:
+      - coverage.xml
+    file-format: COBERTURAXML
