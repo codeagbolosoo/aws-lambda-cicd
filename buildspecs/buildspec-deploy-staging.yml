@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - IMAGE_URI=$(python3 -c "import json; print(json.load(open('imageDetail.json'))['imageUri'])")
+      - echo "Deploying $IMAGE_URI to staging..."
+      - aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI
+      - aws lambda wait function-updated --function-name $FUNCTION_NAME
+      - VERSION=$(aws lambda publish-version --function-name $FUNCTION_NAME --query Version --output text)
+      - aws lambda update-alias --function-name $FUNCTION_NAME --name staging --function-version $VERSION
+      - aws lambda invoke --function-name $FUNCTION_NAME:staging --payload '{"ping":true}' response.json
+      - python3 -c "import json,sys; r=json.load(open('response.json')); print('Smoke test:', r); sys.exit(0 if r.get('statusCode')==200 else 1)"
