@@ -1,0 +1,12 @@
+version: 0.0
+Resources:
+  - MyLambdaFunction:
+      Type: AWS::Lambda::Function
+      Properties:
+        Name: my-python-lambda
+        Alias: prod
+        CurrentVersion: !Ref PreviousVersion
+        TargetVersion: !Ref NewVersion
+
+Hooks:
+  - BeforeAllowTraffic: ValidationTest
