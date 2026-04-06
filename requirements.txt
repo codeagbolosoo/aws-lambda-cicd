@@ -1,0 +1,8 @@
+# Runtime dependencies - installed in the Docker image
+# Keep minimal to reduce Lambda cold start time.
+# boto3 is pre-installed in the Lambda runtime.
+
+# Add your application dependencies below:
+# requests>=2.31.0
+# pydantic>=2.5.0
+# httpx>=0.26.0
