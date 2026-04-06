@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: "3.12"
+    commands:
+      - pip install bandit pip-audit
+
+  build:
+    commands:
+      # SAST - static analysis of Python source
+      - bandit -r src/ -ll -f json -o bandit-report.json
+      # SCA - check dependencies for known CVEs
+      - pip-audit -r requirements.txt -f json -o audit-report.json
+
+artifacts:
+  files:
+    - bandit-report.json
+    - audit-report.json
